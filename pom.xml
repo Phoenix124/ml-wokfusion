@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.workfusion.ml</groupId>
+        <artifactId>hypermodel-parent</artifactId>
+        <version>9.2.0.11</version>
+    </parent>
+
+    <groupId>ml</groupId>
+    <artifactId>ml</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <hypermodel.output.dir>${basedir}/deploy/</hypermodel.output.dir>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <skipObfuscation>true</skipObfuscation>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.workfusion.ml</groupId>
+            <artifactId>nlp-uima-hypermodel</artifactId>
+            <version>${project.parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${hypermodel.output.dir}</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.workfusion.nlp.uima.hypermodel.HypermodelArtifactBuilder</mainClass>
+                    <arguments>
+                        <argument>quickstart</argument>
+                        <argument>${hypermodel.output.dir}</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-classifier</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
